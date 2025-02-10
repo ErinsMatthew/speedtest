@@ -1,1 +1,9 @@
 .DS_Store
+
+errors
+processed
+raw
+
+results-*.json
+
+speedtest.db

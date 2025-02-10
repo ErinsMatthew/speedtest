@@ -1,5 +1,13 @@
 {
     "cSpell.words": [
-        "Ookla"
+        "cfspeedtest",
+        "gdate",
+        "Ookla",
+        "todate",
+        "tonumber"
+    ],
+    "cSpell.ignoreWords": [
+        "cdhor",
+        "Mbit"
     ]
 }
