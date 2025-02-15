@@ -153,8 +153,8 @@ archive_file() {
 
         debug "file_year_month = ${file_year_month[*]}"
 
-        compressed_archive_file="${path}/${file_year_month[year]}-${file_year_month[month]}.tar.gz"
         uncompressed_archive_file="${path}/${file_year_month[year]}-${file_year_month[month]}.tar"
+        compressed_archive_file="${uncompressed_archive_file}.gz"
 
         debug "compressed_archive_file = ${compressed_archive_file}"
 
