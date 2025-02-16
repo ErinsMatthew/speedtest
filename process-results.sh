@@ -183,9 +183,6 @@ main() {
     dependency_check
 
     process_files
-
-    # export FIND_MISSING_PERIOD_DIR=/home/speedtest/find-missing-intervals
-    # node "${FIND_MISSING_PERIOD_DIR}/app.js" | /usr/local/bin/sqlite-utils upsert "${GLOBALS[RESULTS_DB]}" missing_period - --pk=timestamp
 }
 
 main "$@"
