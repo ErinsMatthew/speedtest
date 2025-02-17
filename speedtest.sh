@@ -137,7 +137,7 @@ check_for_dependency() {
     debug "Checking for dependency '$1'."
 
     if ! command -v "$1" &>/dev/null; then
-        printf 'Dependency %s is missing.' "$1" >/dev/stderr
+        printf 'Dependency %s is missing.\n' "$1" >/dev/stderr
 
         exit
     fi

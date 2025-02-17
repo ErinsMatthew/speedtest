@@ -34,7 +34,7 @@ $ archive-results.sh -r .
 - `cut` - pre-installed with macOS and most Linux distributions
 - `gpg` - optional; GNU Privacy Guard; install using [Homebrew](https://formulae.brew.sh/formula/gnupg), another package manager, or [manually](https://gnupg.org/)
 - `cfspeedtest` - CloudFlare speed test CLI; install using [Homebrew](https://formulae.brew.sh/formula/openssl@3), another package manager, or [manually](https://www.openssl.org/source/)
-- `gdate` - install via coreutils using [Homebrew](https://formulae.brew.sh/formula/coreutils), another package manager, or [manually](https://www.gnu.org/software/coreutils/)
+- `date` - specifically GNU date; install via coreutils using [Homebrew](https://formulae.brew.sh/formula/coreutils), another package manager, or [manually](https://www.gnu.org/software/coreutils/)
 - `gunzip` - install via coreutils using [Homebrew](https://formulae.brew.sh/formula/coreutils), another package manager, or [manually](https://www.gnu.org/software/coreutils/)
 - `gzip` - install via coreutils using [Homebrew](https://formulae.brew.sh/formula/coreutils), another package manager, or [manually](https://www.gnu.org/software/coreutils/)
 - `mkdir` - pre-installed with macOS and most Linux distributions

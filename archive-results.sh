@@ -43,9 +43,13 @@ set_filenames() {
 
     results_dir=$1
 
-    mkdir -p "${results_dir}/errors"
-    mkdir -p "${results_dir}/processed"
-    mkdir -p "${results_dir}/raw"
+    if [[ -d ${results_dir} ]]; then
+        mkdir -p "${results_dir}/errors"
+        mkdir -p "${results_dir}/processed"
+        mkdir -p "${results_dir}/raw"
+    else
+        debug "Not making directories as results directory is not valid: ${results_dir}"
+    fi
 
     GLOBALS[PROCESSED_DIR]=${results_dir}/processed
     GLOBALS[RAW_DIR]=${results_dir}/raw
@@ -57,8 +61,6 @@ set_filenames() {
 process_options() {
     local OPTARG # set by getopts
     local OPTIND # set by getopts
-
-    [[ $# -eq 0 ]] && usage
 
     while getopts ":dhr:" o; do
         case "${o}" in
@@ -103,7 +105,7 @@ check_for_dependency() {
     debug "Checking for dependency '$1'."
 
     if ! command -v "$1" &>/dev/null; then
-        printf 'Dependency %s is missing.' "$1" >/dev/stderr
+        printf 'Dependency %s is missing.\n' "$1" >/dev/stderr
 
         exit
     fi
@@ -115,7 +117,7 @@ dependency_check() {
     local -a dependencies=(
         'cat'
         'cut'
-        'gdate'
+        'date'
         'gzip'
         'gunzip'
         'realpath'
@@ -129,7 +131,7 @@ dependency_check() {
 }
 
 get_year_month() {
-    gdate --date="$(basename "${file}" | cut -d - -f 2)" '+year=%Y%nmonth=%m'
+    date --date="$(basename "${file}" | cut -d - -f 2)" '+year=%Y%nmonth=%m'
 }
 
 archive_file() {
@@ -186,17 +188,21 @@ archive_files() {
     paths=("${GLOBALS[PROCESSED_DIR]}" "${GLOBALS[RAW_DIR]}")
 
     for path in "${paths[@]}"; do
-        for file in "${path}"/*.json; do
-            if [[ ! -e ${file} ]]; then
-                debug "Skipping missing file ${file}."
+        if [[ -d ${path} ]]; then
+            for file in "${path}"/*.json; do
+                if [[ ! -e ${file} ]]; then
+                    debug "Skipping missing file ${file}."
 
-                continue
-            fi
+                    continue
+                fi
 
-            file=$(realpath "${file}")
+                file=$(realpath "${file}")
 
-            archive_file "${path}" "${file}"
-        done
+                archive_file "${path}" "${file}"
+            done
+        else
+            debug "Not archiving files as results directory is not valid: ${path}"
+        fi
     done
 }
 
@@ -208,17 +214,21 @@ compress_archives() {
     paths=("${GLOBALS[PROCESSED_DIR]}" "${GLOBALS[RAW_DIR]}")
 
     for path in "${paths[@]}"; do
-        for file in "${path}"/*.tar; do
-            if [[ ! -e ${file} ]]; then
-                debug "Skipping missing file ${file}."
+        if [[ -d ${path} ]]; then
+            for file in "${path}"/*.tar; do
+                if [[ ! -e ${file} ]]; then
+                    debug "Skipping missing file ${file}."
 
-                continue
-            fi
+                    continue
+                fi
 
-            file=$(realpath "${file}")
+                file=$(realpath "${file}")
 
-            gzip "${file}"
-        done
+                gzip "${file}"
+            done
+        else
+            debug "Not compressing archives as results directory is not valid: ${path}"
+        fi
     done
 }
 

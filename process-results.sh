@@ -46,8 +46,12 @@ set_filenames() {
 
     results_dir=$1
 
-    mkdir -p "${results_dir}/errors"
-    mkdir -p "${results_dir}/processed"
+    if [[ -d ${results_dir} ]]; then
+        mkdir -p "${results_dir}/errors"
+        mkdir -p "${results_dir}/processed"
+    else
+        debug "Not making directories as results directory is not valid: ${results_dir}"
+    fi
 
     GLOBALS[RESULTS_DIR]=${results_dir}
     GLOBALS[PROCESSED_DIR]=${results_dir}/processed
@@ -59,8 +63,6 @@ set_filenames() {
 process_options() {
     local OPTARG # set by getopts
     local OPTIND # set by getopts
-
-    [[ $# -eq 0 ]] && usage
 
     while getopts ":b:dhr:" o; do
         case "${o}" in
@@ -115,7 +117,7 @@ check_for_dependency() {
     debug "Checking for dependency '$1'."
 
     if ! command -v "$1" &>/dev/null; then
-        printf 'Dependency %s is missing.' "$1" >/dev/stderr
+        printf 'Dependency %s is missing.\n' "$1" >/dev/stderr
 
         exit
     fi
@@ -158,19 +160,23 @@ process_file() {
 }
 
 process_files() {
-    local file
+    if [[ -d ${GLOBALS[RESULTS_DIR]} ]]; then
+        local file
 
-    for file in "${GLOBALS[RESULTS_DIR]}"/*.json; do
-        if [[ ! -e ${file} ]]; then
-            debug "Skipping missing file ${file}."
+        for file in "${GLOBALS[RESULTS_DIR]}"/*.json; do
+            if [[ ! -e ${file} ]]; then
+                debug "Skipping missing file ${file}."
 
-            continue
-        fi
+                continue
+            fi
 
-        file=$(realpath "${file}")
+            file=$(realpath "${file}")
 
-        process_file "${file}"
-    done
+            process_file "${file}"
+        done
+    else
+        debug "Not processing files as results directory is not valid: ${GLOBALS[RESULTS_DIR]}"
+    fi
 }
 
 main() {
